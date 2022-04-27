@@ -27,16 +27,16 @@ class interactive_ising2d:
         self.beta_values = np.arange(
             self.beta_min, self.beta_max, self.delta_beta)
 
-        self.create_spines()
+        self.create_spins()
 
         self.probability = []
 
         self.reset_variables()
 
-    def create_spines(self):
-        """Creates a random generated spines vector"""
-        # self.spines = np.ones((self.L, self.L), dtype='int')
-        self.spines = (np.random.random(
+    def create_spins(self):
+        """Creates a random generated spins vector"""
+        # self.spins = np.ones((self.L, self.L), dtype='int')
+        self.spins = (np.random.random(
             (self.L_ref, self.L_ref))*2).astype('int')*2-1
 
     def update_probability(self, beta):
@@ -49,28 +49,28 @@ class interactive_ising2d:
         return int((dif_energy+8)/4)
 
     def metropoli(self):
-        """Evolves `simulation.spines` to it's next state using metropoli algorithm."""
+        """Evolves `simulation.spins` to it's next state using metropoli algorithm."""
         for y in range(self.L):
             for x in range(self.L):
-                dif_energy = 2 * self.spines[y, x] * (self.spines[y, (x+1) % self.L] + self.spines[(
-                    y-1) % self.L, x] + self.spines[y, (x-1) % self.L] + self.spines[(y+1) % self.L, x])
+                dif_energy = 2 * self.spins[y, x] * (self.spins[y, (x+1) % self.L] + self.spins[(
+                    y-1) % self.L, x] + self.spins[y, (x-1) % self.L] + self.spins[(y+1) % self.L, x])
 
                 C = self.probability[self.get_probability_index(dif_energy)]
                 if np.random.random() < C:
-                    self.spines[y, x] *= -1
+                    self.spins[y, x] *= -1
 
     def energy(self):
         """Returns the energy"""
-        return sum(-self.spines[y, x] * (self.spines[y, (x+1) % self.L] + self.spines[(y+1) % self.L, x]) for x in range(self.L) for y in range(self.L)) / (2 * self.L**2)
+        return sum(-self.spins[y, x] * (self.spins[y, (x+1) % self.L] + self.spins[(y+1) % self.L, x]) for x in range(self.L) for y in range(self.L)) / (2 * self.L**2)
 
     def magnetization(self):
         """Returns the magnetization"""
-        return np.sum(self.spines)/(self.L**2)
+        return np.sum(self.spins)/(self.L**2)
 
-    def prepare_canvas(self, fig, ax_temporal, ax_spines, ax_beta_values, ax_widgets):
-        """Adds `fig`, `ax_temporal` and `ax_spines` to the `simulation` object as atributes."""
+    def prepare_canvas(self, fig, ax_temporal, ax_spins, ax_beta_values, ax_widgets):
+        """Adds `fig`, `ax_temporal` and `ax_spins` to the `simulation` object as atributes."""
         self.ax_temporal = ax_temporal
-        self.ax_spines = ax_spines
+        self.ax_spins = ax_spins
         self.ax_beta_values = ax_beta_values
         self.ax_widgets = ax_widgets
         self.fig = fig
@@ -127,13 +127,13 @@ class interactive_ising2d:
     def change_L(self, val):
         """Changes the beta used in the simulation"""
         self.L_ref = int(val)
-        self.create_spines()
+        self.create_spins()
 
     def axis_format(self):
         """Gives axis title and label names"""
-        self.ax_spines.set_title('Spines')
-        self.ax_spines.set_ylabel('')
-        self.ax_spines.set_xlabel('')
+        self.ax_spins.set_title('spins')
+        self.ax_spins.set_ylabel('')
+        self.ax_spins.set_xlabel('')
         self.ax_temporal.set_title(r'Thermalization')
         self.ax_temporal.set_xlabel(r'Montecarlo iterations')
         self.ax_temporal.set_ylabel(r'Value')
@@ -216,9 +216,9 @@ class interactive_ising2d:
 
         self._X, self._Y = [], [[], []]
 
-    def plot_spines(self):
-        """Plots `self.spines`"""
-        self.ax_spines.imshow(self.spines, cmap='inferno', norm=self.cnorm)
+    def plot_spins(self):
+        """Plots `self.spins`"""
+        self.ax_spins.imshow(self.spins, cmap='inferno', norm=self.cnorm)
 
     def toggle_pause(self, *args, **kwargs):
         """Pause or resume the simulation"""
@@ -273,8 +273,8 @@ class interactive_ising2d:
         self.ax_temporal.clear()
         self.plot_temporal()
 
-        self.ax_spines.clear()
-        self.plot_spines()
+        self.ax_spins.clear()
+        self.plot_spins()
 
         self.ax_beta_values.clear()
         self.plot_beta_values()

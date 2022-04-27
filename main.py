@@ -16,7 +16,7 @@ if __name__ == '__main__':
     
     ising2d.prepare_canvas(fig, 
                        ax_temporal=ax3, 
-                       ax_spines=ax1, 
+                       ax_spins=ax1, 
                        ax_beta_values=ax4, 
                        ax_widgets=ax2)
     
